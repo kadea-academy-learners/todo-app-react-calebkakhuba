@@ -1,35 +1,61 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState([]); // State pour stocker les taches
+  const [newTask, setNewTask] = useState(''); // State pour une nouvelle tache
+
+  //condition 
+  const handleAddTask = () => {
+    if (newTask.trim() !== '') {
+      setTasks([...tasks, { text: newTask, completed: false }]);
+      setNewTask(''); // Pour Réinitialiser le champ de saisie
+    }
+  };
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+          <h1>TODO LIST With <span>#React</span></h1>
+          <p>
+          Pour la gestion ordonée des taches !!! <br /> <span>Nommez,</span> <br /> <span>Ajoutez,</span> <br /><span>Marquez</span> et <br /><span>Supprimez</span> vos taches librement...
+          </p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <h2>Ma Liste de Tâches</h2>
+        <input
+          type="text"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+        />
+        <button onClick={handleAddTask}>Ajouter</button>
+
+        <ul>
+          {tasks.map((task, index) => (
+            <li key={index}>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => {
+                  const newTasks = [...tasks];
+                  newTasks[index].completed = !newTasks[index].completed;
+                  setTasks(newTasks);
+                }}
+              />
+              <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+                {task.text}
+              </span>
+              <button onClick={() => {
+                const newTasks = tasks.filter((_, i) => i !== index);
+                setTasks(newTasks);
+              }}>Supprimer</button>
+            </li>
+          ))}
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+    
+  );
 }
 
-export default App
+export default App;
