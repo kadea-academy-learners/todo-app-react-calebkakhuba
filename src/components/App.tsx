@@ -1,9 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [tasks, setTasks] = useState([]); // State pour stocker les taches
-  const [newTask, setNewTask] = useState(''); // State pour une nouvelle tache
+  // State pour stocker les taches
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks'); //pour charger les tasks depuis le LS au de;arrage
+    
+    return savedTasks? JSON.parse(savedTasks) : [];
+  }); 
+
+  // State pour une nouvelle tache
+  const [newTask, setNewTask] = useState('');
+
+  //sauvegarde apres chaque chqngement
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+ 
 
   //validation pour la saisie de la task
   const handleAddTask = () => {
